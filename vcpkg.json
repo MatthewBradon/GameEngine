@@ -1,0 +1,13 @@
+{
+  "dependencies": [
+    "assimp",
+    "freeglut",
+    "freetype",
+    "glad",
+    "glfw3",
+    "glm",
+    "imgui",
+    "stb",
+    "spdlog"
+  ]
+}
