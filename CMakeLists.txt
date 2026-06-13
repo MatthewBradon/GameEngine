@@ -20,8 +20,18 @@ add_executable(Sigil
     src/Core/Window.cpp
     src/Core/Log.cpp
     src/Core/Input.cpp
-    src/Platform/GLFWInputBridge.cpp
     src/Core/Event/EngineInput.cpp
+    src/Renderer/RenderCommand.cpp
+    src/Renderer/BufferLayout.cpp
+    src/Renderer/VertexArrayObject.cpp
+    src/Renderer/VertexBufferObject.cpp
+    src/Renderer/IndexBufferObject.cpp
+    src/Renderer/Shader.cpp
+    src/Platform/GLFWInputBridge.cpp
+    src/Platform/OpenGL/OpenGLShader.cpp
+    src/Platform/OpenGL/OpenGLVertexBufferObject.cpp
+    src/Platform/OpenGL/OpenGLIndexBufferObject.cpp
+    src/Platform/OpenGL/OpenGLVertexArrayObject.cpp
 )
 
 # Set output directory for all configurations
