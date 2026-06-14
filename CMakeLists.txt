@@ -48,12 +48,14 @@ target_include_directories(Sigil PRIVATE
     ${CMAKE_SOURCE_DIR}/build/vcpkg_installed/x64-windows/include
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/ThirdParty
 )
 elseif(APPLE)
 target_include_directories(Sigil PRIVATE
     ${CMAKE_SOURCE_DIR}/build/vcpkg_installed/arm64-osx/include
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/ThirdParty
 )
 endif()
 

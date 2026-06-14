@@ -1,10 +1,12 @@
 #pragma once
 
+#include "Core/Assets/Asset.h"
+
 #include <string>
 #include <memory>
 #include <glm/glm.hpp>
 
-class Shader
+class Shader : public Asset
 {
 public:
     virtual ~Shader() = default;
@@ -12,8 +14,8 @@ public:
     virtual void Bind() const = 0;
     virtual void Unbind() const = 0;
     
-    static std::unique_ptr<Shader> Create(const std::string& vertexSrc, const std::string& fragmentSrc);
-    static std::unique_ptr<Shader> Create(const std::string& vertexSrc, const std::string& geometrySrc, const std::string& fragmentSrc);
+    static std::shared_ptr<Shader> Create(const std::string& vertexSrc, const std::string& fragmentSrc);
+    static std::shared_ptr<Shader> Create(const std::string& vertexSrc, const std::string& geometrySrc, const std::string& fragmentSrc);
 
     virtual void SetInt(const std::string& name, int value) = 0;
     virtual void SetFloat(const std::string& name, float value) = 0;

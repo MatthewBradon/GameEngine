@@ -3,3 +3,6 @@
 build
 *.pdb
 *.dll
+ThirdParty/
+.DS_Store
+Sigil
