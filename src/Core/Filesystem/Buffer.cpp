@@ -49,3 +49,23 @@ Buffer& Buffer::operator=(Buffer&& other) noexcept
 
     return *this;
 }
+
+uint8_t* Buffer::Data()
+{
+    return m_Data;
+}
+
+const uint8_t* Buffer::Data() const
+{
+    return m_Data;
+}
+
+size_t Buffer::Size() const
+{
+    return m_Size;
+}
+
+bool Buffer::IsValid() const
+{
+    return m_Data != nullptr && m_Size > 0;
+}

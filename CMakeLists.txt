@@ -12,6 +12,7 @@ find_package(glm CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
 find_package(Freetype CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
+find_package(yaml-cpp CONFIG REQUIRED)
 
 # Sigil executable
 add_executable(Sigil
@@ -32,6 +33,14 @@ add_executable(Sigil
     src/Platform/OpenGL/OpenGLVertexBufferObject.cpp
     src/Platform/OpenGL/OpenGLIndexBufferObject.cpp
     src/Platform/OpenGL/OpenGLVertexArrayObject.cpp
+    src/Core/Assets/AssetManager.cpp
+    src/Core/Assets/AssetLoader.cpp
+    src/Core/Assets/AssetRegistry.cpp
+    src/Core/Filesystem/Buffer.cpp
+    src/Core/Filesystem/Filesystem.cpp
+    ThirdParty/tlsf/tlsf.c
+    src/Core/Memory/Memory.cpp
+    src/Core/Memory/TLSFAllocator.cpp
 )
 
 # Set output directory for all configurations
@@ -69,4 +78,5 @@ target_link_libraries(Sigil PRIVATE
     assimp::assimp
     Freetype::Freetype
     spdlog::spdlog
+    yaml-cpp::yaml-cpp
 )

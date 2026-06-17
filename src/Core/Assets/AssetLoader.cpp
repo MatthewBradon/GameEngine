@@ -1,20 +1,40 @@
 #include "Core/Assets/AssetLoader.h"
-#include "Core/Filesystem/Filesystem.h"
 #include "Renderer/Shader.h"
+#include "Core/Filesystem/Filesystem.h"
+#include "Core/Log.h"
 
-std::shared_ptr<Shader> AssetLoader<Shader>::Load(const std::string& vertexPath, const std::string& fragmentPath)
+template<>
+std::shared_ptr<Shader> AssetLoader<Shader>::Load(const AssetHandle& handle)
 {
-    std::string vertexSource = FileSystem::ReadText(vertexPath);
-    std::string fragmentSource = FileSystem::ReadText(fragmentPath);
+    if (!handle.IsValid())
+    {
+        ENGINE_ERROR("AssetLoader<Shader>::Load: Invalid handle provided.");
+        return nullptr;
+    }
 
-    return Shader::Create(vertexSource, fragmentSource);
-}
+    std::string vertexSrc, fragmentSrc, geometrySrc;
 
-std::shared_ptr<Shader> AssetLoader<Shader>::Load(const std::string& vertexPath, const std::string& geometryPath, const std::string& fragmentPath)
-{
-    std::string vertexSource = FileSystem::ReadText(vertexPath);
-    std::string geometrySource = FileSystem::ReadText(geometryPath);
-    std::string fragmentSource = FileSystem::ReadText(fragmentPath);
+    for (const auto& path : handle.Paths)
+    {
+        std::string extension = FileSystem::GetFileExtension(path);
+        if (extension == ".vert")
+            vertexSrc = FileSystem::ReadText(path);
+        else if (extension == ".frag")
+            fragmentSrc = FileSystem::ReadText(path);
+        else if (extension == ".geom")
+            geometrySrc = FileSystem::ReadText(path);
+    }
 
-    return Shader::Create(vertexSource, geometrySource, fragmentSource);
+    if (vertexSrc.empty() || fragmentSrc.empty())
+    {
+        ENGINE_ERROR("AssetLoader<Shader>::Load: Missing vertex or fragment shader source.");
+        return nullptr;
+    }
+
+    if (!geometrySrc.empty())
+    {
+        return Shader::Create(vertexSrc, geometrySrc, fragmentSrc);
+    }
+    
+    return Shader::Create(vertexSrc, fragmentSrc);
 }

@@ -21,4 +21,5 @@ namespace Input
     double GetScrollDeltaY();
 
     bool IsMouseButtonDown(int button);
+    bool IsMouseButtonPressed(int button);
 }

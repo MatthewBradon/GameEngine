@@ -2,7 +2,7 @@
 
 #include "Platform/OpenGL/OpenGLVertexArrayObject.h"
 
-VertexArrayObject* VertexArrayObject::Create()
+std::shared_ptr<VertexArrayObject> VertexArrayObject::Create()
 {
-    return new OpenGLVertexArrayObject();
+    return std::shared_ptr<VertexArrayObject>(new OpenGLVertexArrayObject());
 }

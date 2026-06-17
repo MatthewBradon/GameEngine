@@ -45,13 +45,16 @@ void OpenGLVertexArrayObject::AddVertexBuffer(
     {
         glEnableVertexAttribArray(index);
 
+        GLenum glBaseType = ShaderDataTypeToOpenGLBaseType(element.Type);
+        uint32_t componentCount = ShaderDataTypeComponentCount(element.Type);
+
         glVertexAttribPointer(
             index,
-            ShaderDataTypeSize(element.Type),
-            ShaderDataTypeToOpenGLBaseType(element.Type),
+            componentCount,
+            glBaseType,
             element.Normalized ? GL_TRUE : GL_FALSE,
             layout.GetStride(),
-            (const void*)(uintptr_t)(element.Offset)
+            (const void*)(uintptr_t)element.Offset
         );
 
         index++;

@@ -1,5 +1,5 @@
 #include "Core/Filesystem/Filesystem.h"
-
+#include "Core/Log.h"
 #include <fstream>
 
 Buffer FileSystem::ReadBinary(const std::string& path)
@@ -10,7 +10,7 @@ Buffer FileSystem::ReadBinary(const std::string& path)
     {
         return {};
     }
-        
+    ENGINE_LOG("Reading binary file: {}", path);
 
     file.seekg(0, std::ios::end);
 
@@ -31,6 +31,8 @@ std::string FileSystem::ReadText(const std::string& path)
 {
     std::ifstream file(path);
 
+    ENGINE_LOG("Reading text file: {}", path);
+
     if (!file.is_open()) 
     {
         return {};
@@ -48,4 +50,9 @@ bool FileSystem::Exists(const std::string& path)
 {
     std::ifstream file(path);
     return file.is_open();
+}
+
+std::string FileSystem::GetFileExtension(const std::string& path)
+{
+    return path.substr(path.rfind('.'));
 }

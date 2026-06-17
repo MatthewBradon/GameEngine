@@ -21,5 +21,5 @@ public:
 
     virtual const std::shared_ptr<IndexBufferObject>& GetIndexBuffer() const = 0;
 
-    static VertexArrayObject* Create();
+    static std::shared_ptr<VertexArrayObject> Create();
 };

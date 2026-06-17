@@ -1,77 +1,109 @@
 #pragma once
+#include "AssetHandle.h"
+#include "AssetLoader.h"
+#include "AssetType.h"
+#include "AssetRegistry.h"
+#include "Asset.h"
+#include "Core/Log.h"
 
 
 #include <memory>
 #include <unordered_map>
 #include <string>
 
-#include "Core/Assets/AssetLoader.h"
-#include "Core/Filesystem/Filesystem.h"
-#include "Renderer/Shader.h"
-
-class Asset;
-
 class AssetManager
 {
 public:
-    template<typename T>
-    static std::shared_ptr<T> Load(const std::string& path);
-    
-    static std::shared_ptr<Shader> Load(const std::string& vertexPath, const std::string& fragmentPath);
-    static std::shared_ptr<Shader> Load(const std::string& vertexPath, const std::string& geometryPath, const std::string& fragmentPath);
 
-    static void Initialize();
-
+    static void Initalize(const std::string& registryPath="assets/assets.yaml");
     static void Shutdown();
 
+    // Load raw handle
+    template<typename T>
+    static std::shared_ptr<T> Load(const AssetHandle& handle);
+
+    template<typename T>
+    static std::shared_ptr<T> Load(const std::string& path)
+    {
+        return Load<T>(AssetHandle::Create(path));
+    }
+
+    template<typename T>
+    static std::shared_ptr<T> Load( const std::initializer_list<std::string>& paths)
+    {
+        return Load<T>(AssetHandle(paths));
+    }
+
+    template<typename T>
+    static std::shared_ptr<T> Get(const std::string& name);
+
+
+    static void Evict(const AssetHandle& handle);
+    static void EvictAll();
+
+    // Removes expired weak_ptrs without unloading live assets
+    static void PurgeExpired();
+
+    static const AssetRegistry& GetRegistry() { return s_Registry; }
+
 private:
+    inline static AssetRegistry s_Registry;
+    
     inline static std::unordered_map<
-        std::string,
-        std::shared_ptr<Asset>> s_AssetCache;
+        AssetHandle,
+        std::weak_ptr<Asset>, 
+        AssetHandleHash> s_AssetCache;
+
 };
 
-
-
 template<typename T>
-std::shared_ptr<T> AssetManager::Load(const std::string& path)
+std::shared_ptr<T> AssetManager::Load(const AssetHandle& handle)
 {
-    auto it = s_AssetCache.find(path);
+    // Check cache
+    auto it = s_AssetCache.find(handle);
     if (it != s_AssetCache.end())
-        return std::static_pointer_cast<T>(it->second);
+    {
+        auto assetPtr = it->second.lock();
+        
+        if (assetPtr)
+        {
+            ENGINE_TRACE("Asset with handle {} found in cache.", handle.ToString());
+            return std::static_pointer_cast<T>(assetPtr);
+        }
+    }
 
-    std::shared_ptr<T> asset = AssetLoader<T>::Load(path);
+    
+    std::shared_ptr<T> asset = AssetLoader<T>::Load(handle);
+    
+    if (!asset)
+    {
+        ENGINE_ERROR("Failed to load asset with handle: {}", handle.ToString());
+        return nullptr;
+    }
 
-    s_AssetCache[path] = asset;
+
+    asset->m_Handle = handle;
+    asset->m_Status = AssetStatus::Ready;
+    s_AssetCache[handle] = std::static_pointer_cast<Asset>(asset);
 
     return asset;
 }
 
-std::shared_ptr<Shader> AssetManager::Load(const std::string& vertexPath, const std::string& fragmentPath)
+template<typename T>
+std::shared_ptr<T> AssetManager::Get(const std::string& name)
 {
-    std::string key = vertexPath + "|" + fragmentPath;
+    const AssetRegistry::Entry* entry = s_Registry.Find(name);
+    if (!entry)
+    {
+        ENGINE_ERROR("Asset with name '{}' not found in registry.", name);
+        return nullptr;
+    }
 
-    auto it = s_AssetCache.find(key);
-    if (it != s_AssetCache.end())
-        return std::static_pointer_cast<Shader>(it->second);
+    if (entry->Type != T::GetStaticType())
+    {
+        ENGINE_ERROR("Asset type mismatch for '{}'. Expected: {}, Found: {}", name, AssetTypeToString(T::GetStaticType()), AssetTypeToString(entry->Type));
+        return nullptr;
+    }
 
-    std::shared_ptr<Shader> shader = AssetLoader<Shader>::Load(vertexPath, fragmentPath);
-
-    s_AssetCache[key] = shader;
-
-    return shader;
-}
-
-std::shared_ptr<Shader> AssetManager::Load(const std::string& vertexPath, const std::string& geometryPath, const std::string& fragmentPath)
-{
-    std::string key = vertexPath + "|" + geometryPath + "|" + fragmentPath;
-
-    auto it = s_AssetCache.find(key);
-    if (it != s_AssetCache.end())
-        return std::static_pointer_cast<Shader>(it->second);
-
-    std::shared_ptr<Shader> shader = AssetLoader<Shader>::Load(vertexPath, geometryPath, fragmentPath);
-
-    s_AssetCache[key] = shader;
-
-    return shader;
+    return Load<T>(entry->Handle);
 }

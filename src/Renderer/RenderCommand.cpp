@@ -34,3 +34,8 @@ void RenderCommand::DrawIndexed(uint32_t indexCount)
 {
     glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 }
+
+void RenderCommand::DrawArrays(uint32_t vertexCount)
+{
+    glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+}

@@ -10,4 +10,5 @@ public:
     static void SetClearColor(const glm::vec4& color);
     static void Clear();
     static void DrawIndexed(uint32_t indexCount = 0);
+    static void DrawArrays(uint32_t vertexCount = 0);
 };

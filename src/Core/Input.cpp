@@ -136,6 +136,18 @@ bool Input::IsMouseButtonDown(int button)
     return it != s_MouseButtons.end() ? it->second : false;
 }
 
+bool Input::IsMouseButtonPressed(int button)
+{
+    static std::unordered_map<int, bool> previousMouseButtons;
+
+    bool isDown = IsMouseButtonDown(button);
+    bool wasDown = previousMouseButtons[button];
+
+    previousMouseButtons[button] = isDown;
+
+    return isDown && !wasDown;
+}
+
 double Input::GetScrollDeltaX()
 {
     return s_ScrollDeltaX;

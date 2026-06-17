@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Assets/Asset.h"
+#include "Core/Assets/AssetType.h"
 
 #include <string>
 #include <memory>
@@ -29,4 +30,7 @@ public:
     virtual void SetVec3(const std::string& name, float x, float y, float z) = 0;
     virtual void SetVec4(const std::string& name, float x, float y, float z, float w) = 0;
     
+    static AssetType GetStaticType() { return AssetType::Shader; }
+    AssetType GetType() const override { return GetStaticType(); }
+
 };
