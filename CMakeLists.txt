@@ -15,32 +15,16 @@ find_package(spdlog CONFIG REQUIRED)
 find_package(yaml-cpp CONFIG REQUIRED)
 
 # Sigil executable
+add_subdirectory(src/Platform)
+add_subdirectory(src/Core)
+add_subdirectory(src/Renderer)
+add_subdirectory(src/Platform/OpenGL)
+add_subdirectory(src/Core/Assets)
+add_subdirectory(ThirdParty)
+
 add_executable(Sigil
     src/main.cpp
     src/Engine.cpp
-    src/Core/Window.cpp
-    src/Core/Log.cpp
-    src/Core/Input.cpp
-    src/Core/Event/EngineInput.cpp
-    src/Renderer/RenderCommand.cpp
-    src/Renderer/BufferLayout.cpp
-    src/Renderer/VertexArrayObject.cpp
-    src/Renderer/VertexBufferObject.cpp
-    src/Renderer/IndexBufferObject.cpp
-    src/Renderer/Shader.cpp
-    src/Platform/GLFWInputBridge.cpp
-    src/Platform/OpenGL/OpenGLShader.cpp
-    src/Platform/OpenGL/OpenGLVertexBufferObject.cpp
-    src/Platform/OpenGL/OpenGLIndexBufferObject.cpp
-    src/Platform/OpenGL/OpenGLVertexArrayObject.cpp
-    src/Core/Assets/AssetManager.cpp
-    src/Core/Assets/AssetLoader.cpp
-    src/Core/Assets/AssetRegistry.cpp
-    src/Core/Filesystem/Buffer.cpp
-    src/Core/Filesystem/Filesystem.cpp
-    ThirdParty/tlsf/tlsf.c
-    src/Core/Memory/Memory.cpp
-    src/Core/Memory/TLSFAllocator.cpp
 )
 
 # Set output directory for all configurations
@@ -58,6 +42,7 @@ target_include_directories(Sigil PRIVATE
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/ThirdParty
+    ${CMAKE_SOURCE_DIR}/ThirdParty/tlsf
 )
 elseif(APPLE)
 target_include_directories(Sigil PRIVATE
@@ -70,6 +55,11 @@ endif()
 
 # Link libraries
 target_link_libraries(Sigil PRIVATE
+    Core
+    Renderer
+    OpenGLPlatform
+    Assets
+    ThirdParty
     glad::glad
     glfw
     imgui::imgui
