@@ -1,14 +1,26 @@
 {
   "dependencies": [
-    "assimp",
-    "freeglut",
-    "freetype",
-    "glad",
-    "glfw3",
     "glm",
     "imgui",
+    {
+      "name": "ktx",
+      "features": [
+        "vulkan"
+      ]
+    },
+    {
+      "name": "sdl3",
+      "features": [
+        "vulkan"
+      ]
+    },
+    "shader-slang",
     "spdlog",
     "stb",
-    "yaml-cpp"
+    "tinyobjloader",
+    "volk",
+    "vulkan-memory-allocator",
+    "yaml-cpp",
+    "freetype"
   ]
 }

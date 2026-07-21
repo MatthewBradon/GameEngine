@@ -2,50 +2,39 @@
 
 #include "Core/Window.h"
 #include "Core/Log.h"
-#include "Platform/GLFWInputBridge.h"
-#include "Renderer/RenderCommand.h"
+#include "Platform/SdlAdapter.h"
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include <SDL3/SDL.h>
 
 Window::Window(uint32_t width, uint32_t height, const char* title)
 {
-    glfwInit();
-
-    m_Handle = glfwCreateWindow(width, height, title, nullptr, nullptr);
-
-    glfwMakeContextCurrent(m_Handle);
-
-    // Initialize GLAD
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        ENGINE_ERROR("Failed to initialize GLAD");
+    if (!SdlAdapter::InitializeVideo()) {
+        ENGINE_LOG("Failed to initialize SDL: {}", SDL_GetError());
         return;
     }
 
-    GLFWInputBridge::Attach(m_Handle, &m_EventQueue);
-    
-    RenderCommand::Init();
-    RenderCommand::SetViewport(0, 0, width, height);
+    m_Handle = SdlAdapter::CreateSDLWindow(title, width, height);
+    ENGINE_ASSERT(m_Handle != nullptr, "Failed to create SDL window: {}", SDL_GetError());
+
+    m_Width = width;
+    m_Height = height;
+
+    ENGINE_LOG("Window created successfully.");
 }
 
 void Window::PollEvents()
 {
-    glfwPollEvents();
-}
-
-void Window::SwapBuffers()
-{
-    glfwSwapBuffers(m_Handle);
+    SdlAdapter::PollEvents(m_EventQueue, m_ShouldClose, m_Width, m_Height);
 }
 
 bool Window::ShouldClose() const
 {
-    return glfwWindowShouldClose(m_Handle);
+    return m_ShouldClose;
 }
 
 bool Window::CloseWindow()
 {
-    glfwSetWindowShouldClose(m_Handle, true);
+    m_ShouldClose = true;
     return true;
 }
 

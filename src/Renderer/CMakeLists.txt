@@ -1,15 +1,10 @@
-file(GLOB RENDERER_SOURCES
-    "*.cpp"
-)
+add_library(Renderer INTERFACE)
 
-add_library(Renderer STATIC ${RENDERER_SOURCES})
-
-target_include_directories(Renderer PUBLIC
+target_include_directories(Renderer INTERFACE
     ${CMAKE_SOURCE_DIR}/include
 )
 
-target_link_libraries(Renderer PUBLIC
+target_link_libraries(Renderer INTERFACE
     Core
-    glad::glad
     glm::glm
 )

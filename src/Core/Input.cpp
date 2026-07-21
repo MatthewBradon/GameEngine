@@ -30,6 +30,8 @@ void Input::Update()
 
     s_MouseDeltaX = s_MouseX - s_LastMouseX;
     s_MouseDeltaY = s_MouseY - s_LastMouseY;
+    s_ScrollDeltaX = 0.0;
+    s_ScrollDeltaY = 0.0;
 
     s_LastMouseX = s_MouseX;
     s_LastMouseY = s_MouseY;

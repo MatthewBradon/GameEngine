@@ -10,5 +10,10 @@ target_include_directories(PlatformCommon PUBLIC
 )
 
 target_link_libraries(PlatformCommon PUBLIC
-    glfw
+    SDL3::SDL3
 )
+
+target_compile_options(PlatformCommon PRIVATE
+    /utf-8
+)
+

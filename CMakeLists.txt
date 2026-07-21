@@ -1,24 +1,27 @@
 cmake_minimum_required(VERSION 3.15)
 project(Sigil)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 # Packages
-find_package(glad CONFIG REQUIRED)
-find_package(glfw3 CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
-find_package(GLUT REQUIRED)
 find_package(Stb REQUIRED)
 find_package(glm CONFIG REQUIRED)
-find_package(assimp CONFIG REQUIRED)
 find_package(Freetype CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(yaml-cpp CONFIG REQUIRED)
+find_package(SDL3 CONFIG REQUIRED)
+find_package(tinyobjloader CONFIG REQUIRED)
+find_package(ktx CONFIG REQUIRED)
+find_package(volk CONFIG REQUIRED)
+find_package(Vulkan)
+find_package(VulkanMemoryAllocator CONFIG REQUIRED)
+find_package(slang CONFIG REQUIRED)
+
 
 # Sigil executable
 add_subdirectory(src/Platform)
 add_subdirectory(src/Core)
 add_subdirectory(src/Renderer)
-add_subdirectory(src/Platform/OpenGL)
 add_subdirectory(src/Core/Assets)
 add_subdirectory(ThirdParty)
 
@@ -57,16 +60,19 @@ endif()
 target_link_libraries(Sigil PRIVATE
     Core
     Renderer
-    OpenGLPlatform
     Assets
     ThirdParty
-    glad::glad
-    glfw
     imgui::imgui
-    GLUT::GLUT
     glm::glm
-    assimp::assimp
     Freetype::Freetype
     spdlog::spdlog
     yaml-cpp::yaml-cpp
+    SDL3::SDL3
+    KTX::ktx
+    tinyobjloader::tinyobjloader
+    volk::volk
+    volk::volk_headers
+    Vulkan::Headers
+    GPUOpen::VulkanMemoryAllocator
+    slang::slang
 )

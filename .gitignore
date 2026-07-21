@@ -3,6 +3,9 @@
 build
 *.pdb
 *.dll
-ThirdParty/
+ThirdParty/**
+!ThirdParty/
+!ThirdParty/CMakeLists.txt
+
 .DS_Store
 Sigil
