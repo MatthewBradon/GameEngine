@@ -1,10 +1,9 @@
 #pragma once
 
+#include <SDL3/SDL.h>
 #include <cstdint>
-
 #include "Core/Event/EventQueue.h"
 
-struct SDL_Window;
 
 class Window
 {
@@ -16,6 +15,8 @@ public:
     bool ShouldClose() const;
     bool CloseWindow();
 
+    SDL_Window* GetHandle() const { return m_Handle; }
+
     void updateExtents();
 
     uint32_t GetWidth() const { return m_Width; }
@@ -24,8 +25,10 @@ public:
 
     EventQueue& GetEventQueue();
 
+    ~Window();
+
 private:
-    SDL_Window* m_Handle;
+    SDL_Window* m_Handle{nullptr};
     EventQueue m_EventQueue;
     bool m_ShouldClose{false};
 

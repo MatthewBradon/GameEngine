@@ -46,6 +46,7 @@ target_include_directories(Sigil PRIVATE
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/ThirdParty
     ${CMAKE_SOURCE_DIR}/ThirdParty/tlsf
+    ${CMAKE_SOURCE_DIR}/src/Renderer
 )
 elseif(APPLE)
 target_include_directories(Sigil PRIVATE
@@ -53,6 +54,7 @@ target_include_directories(Sigil PRIVATE
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/ThirdParty
+    ${CMAKE_SOURCE_DIR}/src/Renderer
 )
 endif()
 

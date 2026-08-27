@@ -33,6 +33,16 @@
         } \
     } while (0)
 
+
+#define VULKAN_ASSERT(result) \
+    do { \
+        if (result != 0) { \
+            ENGINE_ERROR("Vulkan Error: {}", static_cast<int>(result)); \
+            DEBUG_BREAK(); \
+            ENGINE_ERROR("Assertion hit"); \
+        } \
+    } while (0)
+
 namespace Log
 {
     void Init();

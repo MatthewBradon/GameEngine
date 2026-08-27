@@ -4,16 +4,12 @@
 #include "Core/Log.h"
 #include "Platform/SdlAdapter.h"
 
-#include <SDL3/SDL.h>
-
 Window::Window(uint32_t width, uint32_t height, const char* title)
 {
-    if (!SdlAdapter::InitializeVideo()) {
-        ENGINE_LOG("Failed to initialize SDL: {}", SDL_GetError());
-        return;
-    }
+    ENGINE_ASSERT(SDL_Init(SDL_INIT_VIDEO), "Failed to initialize SDL: {}", SDL_GetError());
 
-    m_Handle = SdlAdapter::CreateSDLWindow(title, width, height);
+    m_Handle = SDL_CreateWindow(title, static_cast<int>(width), static_cast<int>(height), SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE);
+
     ENGINE_ASSERT(m_Handle != nullptr, "Failed to create SDL window: {}", SDL_GetError());
 
     m_Width = width;
@@ -41,4 +37,12 @@ bool Window::CloseWindow()
 EventQueue& Window::GetEventQueue()
 {
     return m_EventQueue;
+}
+
+Window::~Window()
+{
+    if (m_Handle) {
+        SDL_DestroyWindow(m_Handle);
+        ENGINE_LOG("Window destroyed.");
+    }
 }

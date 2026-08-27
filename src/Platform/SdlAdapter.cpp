@@ -140,22 +140,7 @@ namespace
 }
 
 namespace SdlAdapter
-{
-    bool InitializeVideo()
-    {
-        return SDL_Init(SDL_INIT_VIDEO);
-    }
-
-    SDL_Window* CreateSDLWindow(const char* title, std::uint32_t width, std::uint32_t height)
-    {
-        return SDL_CreateWindow(title, static_cast<int>(width), static_cast<int>(height), SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE);
-    }
-
-    void SetRelativeMouseMode(SDL_Window* window, bool enabled)
-    {
-        SDL_SetWindowRelativeMouseMode(window, enabled);
-    }
-
+{    
     void PollEvents(EventQueue& eventQueue, bool& shouldClose, std::uint32_t& width, std::uint32_t& height)
     {
         SDL_Event event;
