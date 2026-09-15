@@ -1,6 +1,7 @@
 #pragma once
 #include "AssetHandle.h"
 #include "AssetType.h"
+#include "AssetMetadata.h"
 #include <string>
 
 enum class AssetStatus
@@ -21,6 +22,8 @@ public:
     const AssetHandle& GetHandle() const { return m_Handle; }
     AssetStatus GetStatus() const { return m_Status; }
 
+    virtual void Configure(const AssetMetadata& metadata) {}
+
     const std::string& GetPath() const
     {
         static const std::string emptyString;
@@ -29,7 +32,7 @@ public:
 
 protected:
     AssetHandle m_Handle;
-    AssetStatus m_Status;
+    AssetStatus m_Status{AssetStatus::Unloaded};
 
     friend class AssetManager;
 };

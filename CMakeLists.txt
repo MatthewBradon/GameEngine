@@ -18,17 +18,24 @@ find_package(VulkanMemoryAllocator CONFIG REQUIRED)
 find_package(slang CONFIG REQUIRED)
 
 
-# Sigil executable
+# Project libraries (order matters: Core depends on PlatformCommon,
+# Assets and Renderer depend on Core)
+add_subdirectory(ThirdParty)
 add_subdirectory(src/Platform)
 add_subdirectory(src/Core)
-add_subdirectory(src/Renderer)
 add_subdirectory(src/Core/Assets)
-add_subdirectory(ThirdParty)
+add_subdirectory(src/Renderer)
 
+# Sigil executable
 add_executable(Sigil
     src/main.cpp
     src/Engine.cpp
 )
+
+# volk loads Vulkan function pointers itself, so all Vulkan headers must be
+# included with VK_NO_PROTOTYPES defined (no real function prototypes).
+# Defining it globally keeps this correct regardless of header include order.
+target_compile_definitions(Sigil PRIVATE VK_NO_PROTOTYPES)
 
 # Set output directory for all configurations
 set_target_properties(Sigil PROPERTIES

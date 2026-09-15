@@ -1,6 +1,7 @@
 file(GLOB RENDERER_SOURCES
     "*.cpp"
     "Vulkan/*.cpp"
+    "Shader/*.cpp"
 )
 
 

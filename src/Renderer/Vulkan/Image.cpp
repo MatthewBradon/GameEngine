@@ -1,23 +1,19 @@
 #include "Renderer/Vulkan/Image.h"
 #include "Renderer/Vulkan/VulkanContext.h"
+#include "Core/Log.h"
 
 void Image::Create(VulkanContext& context, VkImageCreateInfo& imageCreateInfo, VmaAllocationCreateInfo& allocationCreateInfo)
 {
     m_Allocator = context.GetAllocator();
     m_Device = context.GetDevice();
 
-    VkResult result = vmaCreateImage(
+    VULKAN_ASSERT(vmaCreateImage(
         m_Allocator,
         &imageCreateInfo,
         &allocationCreateInfo,
         &m_Image,
         &m_Allocation,
-        nullptr);
-
-    if (result != VK_SUCCESS)
-    {
-        throw std::runtime_error("Failed to create Vulkan image");
-    }
+        nullptr));
 
     // Create image view
     VkImageViewCreateInfo viewCreateInfo{
@@ -34,11 +30,7 @@ void Image::Create(VulkanContext& context, VkImageCreateInfo& imageCreateInfo, V
         }
     };
 
-    result = vkCreateImageView(m_Device, &viewCreateInfo, nullptr, &m_View);
-    if (result != VK_SUCCESS)
-    {
-        throw std::runtime_error("Failed to create Vulkan image view");
-    }
+    VULKAN_ASSERT(vkCreateImageView(m_Device, &viewCreateInfo, nullptr, &m_View));
 }
 
 void Image::Destroy()

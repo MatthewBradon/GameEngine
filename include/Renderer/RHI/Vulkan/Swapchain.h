@@ -13,11 +13,11 @@ class Swapchain
 public:
     
 struct Image
-    {
-        uint32_t index;
-        VkImage image;
-        VkImageView view;
-    };
+{
+    uint32_t index;
+    VkImage image;
+    VkImageView view;
+};
     
     void Initialize(VulkanContext& context, Window* window);
     void Shutdown();

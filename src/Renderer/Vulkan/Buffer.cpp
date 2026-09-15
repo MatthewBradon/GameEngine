@@ -24,21 +24,25 @@ void Buffer::Create(VulkanContext& context, const BufferCreateDesc& desc)
     allocationInfo.usage = desc.memoryUsage;
     allocationInfo.flags = desc.allocationFlags;
 
-    VkResult result = vmaCreateBuffer(
+    VULKAN_ASSERT(vmaCreateBuffer(
         m_Allocator,
         &bufferInfo,
         &allocationInfo,
         &m_Buffer,
         &m_Allocation,
-        nullptr);
+        nullptr));
 
-    VULKAN_ASSERT(result, "Failed to create Vulkan buffer");
 }
 
 void Buffer::Destroy()
 {
     if (m_Buffer != VK_NULL_HANDLE)
     {
+        if (m_MappedData != nullptr)
+        {
+            Unmap();
+        }
+
         vmaDestroyBuffer(
             m_Allocator,
             m_Buffer,
@@ -59,12 +63,11 @@ void* Buffer::Map()
         return m_MappedData;
     }
 
-    VkResult result = vmaMapMemory(
+    VULKAN_ASSERT(vmaMapMemory(
         m_Allocator,
         m_Allocation,
-        &m_MappedData);
+        &m_MappedData));
 
-    VULKAN_ASSERT(result, "Failed to map Vulkan buffer memory");
 
     return m_MappedData;
 }

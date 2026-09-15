@@ -1,26 +1,34 @@
 #pragma once
 #include "AssetHandle.h"
 #include "AssetType.h"
+#include "AssetMetadata.h"
+#include <yaml-cpp/yaml.h>
 
+
+#include <variant>
 /*
 Example YAML
-
-assets.yaml example:
-  assets:
+assets:
     Phong:
       type: Shader
       paths:
-        - shaders/phong.vert
-        - shaders/phong.frag
-    BrickWall:
-      type: Texture2D
-      paths:
-        - textures/brick_albedo.png
-    PlayerMesh:
-      type: Mesh
-      paths:
-        - meshes/player.obj
-        - meshes/player.mtl
+        - shaders/phong.slang
+
+      entry_points:
+        - name: main
+          stage: vertex
+
+        - name: main
+          stage: fragment
+
+  Bloom:
+    type: Shader
+    paths:
+      - shaders/bloom.slang
+
+    entry_points:
+      - name: main
+        stage: compute
 
 */
 
@@ -31,6 +39,8 @@ public:
     {
         AssetType Type = AssetType::None;
         AssetHandle Handle;
+        AssetMetadata Metadata;
+        
     };
 
     static AssetRegistry LoadFromYAML(const std::string& yamlFilePath);
@@ -42,12 +52,11 @@ public:
         return it != m_Entries.end() ? &it->second : nullptr;
     }
 
-    const bool IsEmpty() const
-    {
-        return m_Entries.empty();
-    }
+    bool IsEmpty() const { return m_Entries.empty(); }
 
 private:
+    static AssetMetadata ParseMetadata(AssetType type, const YAML::Node& node);
+    static ShaderMetadata ParseShaderMetadata(const YAML::Node& node);
     std::unordered_map<std::string, Entry> m_Entries;
 
 };

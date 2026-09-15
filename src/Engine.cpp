@@ -4,35 +4,30 @@
 #include "Core/Input.h"
 #include "Core/Event/EngineInput.h"
 #include "Core/Assets/AssetManager.h"
-
+#include "Renderer/Renderer.h"
 #include <memory>
 #include <random>
 
-Engine::Engine() {
+void Engine::Initialize() {
+
     Log::Init();
     
     m_Window = std::make_unique<Window>(800, 600, "Sigil");
 
-    ENGINE_LOG("Engine initialized successfully.");
-    
-}
+    ENGINE_LOG("Window initialized successfully.");
 
-
-
-Engine::~Engine() {
-    // Destructor code here
-}
-
-void Engine::Initialize() {
-    AssetManager::Initalize("assets/assets.yaml");
+    m_Renderer.Initialize(*m_Window);
+    AssetManager::Initialize("assets/assets.yaml");
     ENGINE_LOG("Asset Manager initialized successfully.");
-
-
-
+    Input::SetWindow(m_Window.get());
 }
 
 void Engine::Run()
 {
+    AssetManager::PrintCacheStatus();
+    m_Renderer.LoadBasicShader();
+    AssetManager::PrintCacheStatus();
+    
     while (!m_Window->ShouldClose())
     {
         Input::Update();
@@ -43,6 +38,7 @@ void Engine::Run()
         {
             Input::OnEvent(*event);
         }
+
 
         if (Input::IsKeyPressed(EngineInput::KEY_ESCAPE))
         {
@@ -56,5 +52,10 @@ void Engine::Run()
 }
 
 void Engine::Shutdown() {
-    // Cleanup code here
+    ENGINE_LOG("Shutting down engine...");
+    
+    m_Window.reset();
+
+    m_Renderer.Shutdown();
+    AssetManager::Shutdown();
 }

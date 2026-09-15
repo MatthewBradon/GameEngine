@@ -2,5 +2,11 @@ assets:
   BasicShader:
     type: Shader
     paths:
-      - "assets/shaders/basic.vert"
-      - "assets/shaders/basic.frag"
+    - assets/shaders/BasicShader.slang
+
+    entry_points:
+    - name: vertexMain
+      stage: vertex
+
+    - name: fragmentMain
+      stage: fragment

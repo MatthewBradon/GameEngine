@@ -147,7 +147,7 @@ namespace SdlAdapter
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_EVENT_QUIT:
-                case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+                    std::cout << "Window close requested." << std::endl;
                     eventQueue.Push<WindowCloseRequestedEvent>();
                     shouldClose = true;
                     break;

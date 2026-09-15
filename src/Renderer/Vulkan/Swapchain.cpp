@@ -252,7 +252,7 @@ void Swapchain::DestroyDepthResources()
 }
 
 
-VkSurfaceFormatKHR ChooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& formats)
+VkSurfaceFormatKHR Swapchain::ChooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& formats)
 {
     constexpr std::array preferredFormats
     {
@@ -276,7 +276,7 @@ VkSurfaceFormatKHR ChooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& fo
 }
 
 
-VkPresentModeKHR ChoosePresentMode(const std::vector<VkPresentModeKHR>& presentModes)
+VkPresentModeKHR Swapchain::ChoosePresentMode(const std::vector<VkPresentModeKHR>& presentModes)
 {
     constexpr std::array preferredModes
     {

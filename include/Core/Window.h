@@ -23,6 +23,8 @@ public:
     uint32_t GetHeight() const { return m_Height; }
 
 
+    static Window* GetCurrentWindow();
+
     EventQueue& GetEventQueue();
 
     ~Window();

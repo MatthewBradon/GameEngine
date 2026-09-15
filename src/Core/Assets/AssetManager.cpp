@@ -1,11 +1,11 @@
 #include "Core/Assets/AssetManager.h"
 #include <algorithm>
 
-void AssetManager::Initalize(const std::string& registryPath)
+void AssetManager::Initialize(const std::string& registryPath)
 {
     if (registryPath.empty())
     {
-        ENGINE_ERROR("AssetManager::Initalize: Registry path is empty.");    
+        ENGINE_ERROR("AssetManager::Initialize: Registry path is empty.");    
         return;
     }
 
@@ -48,7 +48,7 @@ void AssetManager::PurgeExpired()
         }
         else
         {
-            std::next(it);
+            ++it;
         }
     }
 }

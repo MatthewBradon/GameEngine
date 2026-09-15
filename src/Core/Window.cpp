@@ -46,3 +46,11 @@ Window::~Window()
         ENGINE_LOG("Window destroyed.");
     }
 }
+
+void Window::updateExtents()
+{
+    int w, h;
+    SDL_GetWindowSize(m_Handle, &w, &h);
+    m_Width = static_cast<uint32_t>(w);
+    m_Height = static_cast<uint32_t>(h);
+}

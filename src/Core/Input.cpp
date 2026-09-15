@@ -3,6 +3,9 @@
 #include "Core/Event/EventDispatcher.h"
 #include "Core/Event/KeyEvent.h"
 #include "Core/Event/MouseEvent.h"
+#include "Core/Window.h"
+#include "Core/Event/WindowEvent.h"
+
 
 #include <cstring>
 #include <unordered_map>
@@ -21,6 +24,8 @@ static double s_MouseDeltaY{0.0};
 
 static double s_ScrollDeltaX{0.0};
 static double s_ScrollDeltaY{0.0};
+
+static Window* s_Window{nullptr};
 
 static std::unordered_map<int, bool> s_MouseButtons;
 
@@ -99,6 +104,25 @@ void Input::OnEvent(Event& event)
 
             return false;
         });
+
+    dispatcher.Dispatch<WindowResizedEvent>(
+        [](WindowResizedEvent& e)
+        {
+            ENGINE_LOG("Window resized: New width {}, New height {}", e.GetWidth(), e.GetHeight());
+            s_Window->updateExtents();
+            return false;
+        });
+    
+    dispatcher.Dispatch<WindowCloseRequestedEvent>(
+        [](WindowCloseRequestedEvent& e)
+        {
+            ENGINE_LOG("Window close requested.");
+            if (s_Window)
+            {
+                s_Window->CloseWindow();
+            }
+            return false;
+        });
 }
 
 bool Input::IsKeyDown(int keycode)
@@ -158,4 +182,11 @@ double Input::GetScrollDeltaX()
 double Input::GetScrollDeltaY()
 {
     return s_ScrollDeltaY;
+}
+
+
+bool Input::SetWindow(Window* window)
+{
+    s_Window = window;
+    return true;
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 class Event;
+class Window;
 
 namespace Input
 {
@@ -22,4 +23,6 @@ namespace Input
 
     bool IsMouseButtonDown(int button);
     bool IsMouseButtonPressed(int button);
+
+    bool SetWindow(Window* window);
 }

@@ -15,7 +15,7 @@ class AssetManager
 {
 public:
 
-    static void Initalize(const std::string& registryPath="assets/assets.yaml");
+    static void Initialize(const std::string& registryPath="assets/assets.yaml");
     static void Shutdown();
 
     // Load raw handle
@@ -45,6 +45,23 @@ public:
     static void PurgeExpired();
 
     static const AssetRegistry& GetRegistry() { return s_Registry; }
+
+    static void PrintCacheStatus()
+    {
+        ENGINE_LOG("Asset Cache Status:");
+        for (const auto& [handle, weakPtr] : s_AssetCache)
+        {
+            auto assetPtr = weakPtr.lock();
+            if (assetPtr)
+            {
+                ENGINE_LOG("  Handle: {}, Asset Type: {}, Status: {}", handle.ToString(), AssetTypeToString(assetPtr->GetType()), static_cast<int>(assetPtr->GetStatus()));
+            }
+            else
+            {
+                ENGINE_LOG("  Handle: {}, Asset has expired.", handle.ToString());
+            }
+        }
+    }
 
 private:
     inline static AssetRegistry s_Registry;
@@ -104,6 +121,16 @@ std::shared_ptr<T> AssetManager::Get(const std::string& name)
         ENGINE_ERROR("Asset type mismatch for '{}'. Expected: {}, Found: {}", name, AssetTypeToString(T::GetStaticType()), AssetTypeToString(entry->Type));
         return nullptr;
     }
+    
+    auto asset = Load<T>(entry->Handle);
 
-    return Load<T>(entry->Handle);
+    if (!asset)
+    {
+        ENGINE_ERROR("Failed to load asset with name '{}'.", name);
+        return nullptr;
+    }
+
+    asset->Configure(entry->Metadata);
+
+    return asset;
 }

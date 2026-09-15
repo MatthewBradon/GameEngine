@@ -31,9 +31,9 @@ void VulkanContext::Initialize(Window* window)
     FindQueueFamilyIndices();
     ENGINE_ASSERT(SDL_Vulkan_GetPresentationSupport(m_Instance, m_PhysicalDevice, m_GraphicsQueueFamily), "SDL_Vulkan_GetPresentationSupport failed: {}", SDL_GetError());
 
-    vkGetDeviceQueue(m_Device, m_GraphicsQueueFamily, 0, &m_GraphicsQueue);
-
     CreateDevice();
+
+    vkGetDeviceQueue(m_Device, m_GraphicsQueueFamily, 0, &m_GraphicsQueue);
     
     CreateAllocator();
 
@@ -66,7 +66,7 @@ void VulkanContext::CreateInstance()
     {
         "VK_LAYER_KHRONOS_validation"
     };    
-
+    
     VkDebugUtilsMessengerCreateInfoEXT debugInfo = {
         .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
         .messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
@@ -220,7 +220,7 @@ void VulkanContext::CreateDevice()
     VkPhysicalDeviceFeatures enabledVk10Features{
         .samplerAnisotropy = VK_TRUE
     }; 
-
+    
 	const std::vector<const char*> deviceExtensions{VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
 	VkDeviceCreateInfo deviceCreateInfo{
@@ -298,7 +298,7 @@ VkSurfaceKHR VulkanContext::GetSurface() const
     return m_Surface;
 }
 
-static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
+VKAPI_ATTR VkBool32 VKAPI_CALL VulkanContext::debugCallback(
     VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType,
     const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
